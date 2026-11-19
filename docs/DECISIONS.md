@@ -11,8 +11,8 @@ Decisions made while implementing the brief without blocking on the owner.
 | Planet diameters | Brief values are shown. NSSDCA mean-radius derivations differ by 2–4 km for Jupiter/Saturn; recorded in `SOURCES.md`. |
 | Speed figure | The app avoids the unverified 16.9 km/s. It uses the verified 24 h light-time and NASA's ~17.0 km/s / ~61,000 kph where a speed is needed. |
 | 3D model | The owner supplied `Voyager3D.glb` and later the NASA resource page. It is bundled and credited, although the optional v1 scope does not include a 3D viewer. |
-| Repository URL | Not supplied. `VoyagerFacts.repositoryUrl` contains the placeholder `https://github.com/your-username/aurum-signal`; replace before publishing. |
-| Package id | Set to the supplied placeholder `com.example.aurum_signal` on Android and iOS. |
-| Screenshots/GIFs | No physical device or browser capture tool was available in this environment. The two committed golden images cover the intro's key visual moments. A device run should replace them with full-screen captures. |
+| Repository URL | Taken from the `origin` remote and set in `VoyagerFacts.repositoryUrl` to `https://github.com/MeSafal/Aurum-Signal-Voyager-Tribute`. No push was attempted. |
+| Package id | Set to the supplied placeholder `com.example.aurum_signal` on Android and iOS. `MainActivity.kt` was moved to the matching package after a launch crash; `test/android_config_test.dart` now guards namespace, applicationId, manifest activity and Kotlin package consistency. |
+| Screenshots/GIFs | The gate screenshot was captured from the real web build with headless Chromium. A physical-device run is still needed for full Android/iOS captures and an intro GIF. |
 | Web/APK deployment | CI is configured for GitHub Pages and produces an APK artifact. No push credentials were available, so nothing was pushed to a remote. |
 | Notifications/permissions | None requested. No camera, torch, location or notification permission is used. |

@@ -26,6 +26,9 @@ an APK artifact.
 - New media must come from a verified public source. Record the URL, size and
   licence in `docs/ASSETS.md` and the facts in `docs/SOURCES.md`.
 - Keep the unofficial, not-affiliated notice and the Disclaimer page intact.
+- If the Android application id changes, move `MainActivity.kt` to the matching
+  package path and update its `package` declaration.
+  `test/android_config_test.dart` enforces this.
 
 ## Generated files
 

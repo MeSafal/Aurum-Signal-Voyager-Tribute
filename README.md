@@ -7,11 +7,13 @@ from Earth on 18 November 2026. Not affiliated with or endorsed by NASA/JPL.
 All NASA media used here is credited in [docs/ASSETS.md](docs/ASSETS.md); the
 app also has an in-app **Disclaimer & credits** page.
 
+![Touch to transmit gate](docs/screenshots/01_gate.png)
 ![VGR glyph detail](test/goldens/vgr_glyph_row.png)
 ![Date reveal detail](test/goldens/date_card.png)
 
-Full-screen captures require a device or browser run; these two images are the
-committed golden tests for the intro's Morse and date moments.
+The gate image is a real web-build screenshot; the other two are the committed
+golden tests for the intro's Morse and date moments. A device run is still
+needed for an intro GIF and platform-specific full-screen captures.
 
 ## What it does
 
@@ -81,8 +83,8 @@ GitHub Actions runs analyze, format check and tests on every push/PR. On
 repository name and deploys it to GitHub Pages, and uploads a debug APK as an
 artifact. Pages must be set to **GitHub Actions** as the source.
 
-Before publishing, replace the repository placeholder in
-`lib/core/data/facts.dart` (`repositoryUrl`) and the package id placeholder
+The repository URL in `lib/core/data/facts.dart` (`repositoryUrl`) is set from
+the `origin` remote. The package id remains the supplied placeholder
 `com.example.aurum_signal` in the Android/iOS project files.
 
 ## Credits and licence

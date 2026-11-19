@@ -2,7 +2,7 @@ class VoyagerFacts {
   static const String appName = 'Aurum Signal';
   static const String subtitle = 'A tribute to Voyager 1 · One Light-Day';
   static const String repositoryUrl =
-      'https://github.com/your-username/aurum-signal';
+      'https://github.com/MeSafal/Aurum-Signal-Voyager-Tribute';
 
   static final DateTime milestoneUtc = DateTime.utc(2026, 11, 18, 10, 16, 7);
   static const double milestoneKm = 25902068356;
