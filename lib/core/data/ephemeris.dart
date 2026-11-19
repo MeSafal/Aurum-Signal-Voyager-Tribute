@@ -61,7 +61,8 @@ class Ephemeris {
     }
     final left = _points[low];
     final right = _points[high];
-    final fraction = time.difference(left.time).inMicroseconds /
+    final fraction =
+        time.difference(left.time).inMicroseconds /
         right.time.difference(left.time).inMicroseconds;
     return left.km + fraction * (right.km - left.km);
   }

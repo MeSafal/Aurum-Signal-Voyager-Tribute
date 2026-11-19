@@ -76,9 +76,9 @@ class _IntroScreenState extends ConsumerState<IntroScreen> {
                   onPressed: _finish,
                   child: Text(
                     'SKIP',
-                    style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                          color: AurumColors.gold,
-                        ),
+                    style: Theme.of(
+                      context,
+                    ).textTheme.labelSmall?.copyWith(color: AurumColors.gold),
                   ),
                 ),
               ),
@@ -91,7 +91,7 @@ class _IntroScreenState extends ConsumerState<IntroScreen> {
   Widget _phaseView(
     IntroPhase phase,
     AppSettings settings,
-    PlayerService player,
+    AudioPlayback player,
     IntroController controller,
   ) {
     switch (phase) {
@@ -125,10 +125,7 @@ class _IntroScreenState extends ConsumerState<IntroScreen> {
           onComplete: controller.toExit,
         );
       case IntroPhase.exit:
-        return ExitPart(
-          key: const ValueKey('exit'),
-          onComplete: _finish,
-        );
+        return ExitPart(key: const ValueKey('exit'), onComplete: _finish);
       case IntroPhase.done:
         return const SizedBox.shrink(key: ValueKey('done'));
     }

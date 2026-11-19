@@ -1,8 +1,8 @@
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:voyger/core/data/ephemeris.dart';
-import 'package:voyger/core/data/facts.dart';
+import 'package:aurum_signal/core/data/ephemeris.dart';
+import 'package:aurum_signal/core/data/facts.dart';
 
 void main() {
   late Ephemeris ephemeris;

@@ -25,10 +25,7 @@ class _ScrollRevealState extends State<ScrollReveal>
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(
-      vsync: this,
-      duration: Motion.uiMedium,
-    );
+    _controller = AnimationController(vsync: this, duration: Motion.uiMedium);
     widget.scrollController.addListener(_checkVisibility);
     WidgetsBinding.instance.addPostFrameCallback((_) => _checkVisibility());
   }

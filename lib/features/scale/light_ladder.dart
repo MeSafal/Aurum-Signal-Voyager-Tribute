@@ -13,15 +13,8 @@ class LightLadder extends StatelessWidget {
   Widget build(BuildContext context) {
     final rows = <_LadderRow>[
       for (final body in kLadderBodies.where((planet) => planet.name != 'Sun'))
-        _LadderRow(
-          name: body.name,
-          au: body.distanceAu,
-          planet: body,
-        ),
-      const _LadderRow(
-        name: 'Voyager 1',
-        au: VoyagerFacts.milestoneAu,
-      ),
+        _LadderRow(name: body.name, au: body.distanceAu, planet: body),
+      const _LadderRow(name: 'Voyager 1', au: VoyagerFacts.milestoneAu),
     ];
 
     return Column(
@@ -64,8 +57,8 @@ class _LightRow extends StatelessWidget {
     final rest = minutes - hours * 60;
     final label = hours == 0
         ? '${minutes.round()} min'
-        : '${hours} h ${rest.round().toString().padLeft(2, '0')} m';
-    final width = (minutes / 1440).clamp(0.02, 1.0) as double;
+        : '$hours h ${rest.round().toString().padLeft(2, '0')} m';
+    final width = (minutes / 1440).clamp(0.02, 1.0).toDouble();
 
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8),
@@ -112,9 +105,9 @@ class _LightRow extends StatelessWidget {
               label,
               textAlign: TextAlign.right,
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    fontFamily: 'AurumMono',
-                    color: AurumColors.goldLight,
-                  ),
+                fontFamily: 'AurumMono',
+                color: AurumColors.goldLight,
+              ),
             ),
           ),
         ],

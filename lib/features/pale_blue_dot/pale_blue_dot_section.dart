@@ -69,9 +69,9 @@ class PaleBlueDotSection extends StatelessWidget {
                     child: Text(
                       'Earth · ${VoyagerFacts.paleBlueDotDate} · '
                       '${VoyagerFacts.paleBlueDotDistance}',
-                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                            color: AurumColors.text,
-                          ),
+                      style: Theme.of(
+                        context,
+                      ).textTheme.bodyMedium?.copyWith(color: AurumColors.text),
                     ),
                   ),
                 ),

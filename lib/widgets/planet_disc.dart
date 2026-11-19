@@ -35,9 +35,8 @@ class PlanetDisc extends StatelessWidget {
             : Image.asset(
                 planet.imageAsset!,
                 fit: BoxFit.cover,
-                errorBuilder: (context, error, stack) => ColoredBox(
-                  color: Color(planet.color),
-                ),
+                errorBuilder: (context, error, stack) =>
+                    ColoredBox(color: Color(planet.color)),
               ),
       ),
     );
@@ -48,10 +47,7 @@ class PlanetDisc extends StatelessWidget {
       children: [
         disc,
         const SizedBox(height: 8),
-        Text(
-          planet.name,
-          style: Theme.of(context).textTheme.bodySmall,
-        ),
+        Text(planet.name, style: Theme.of(context).textTheme.bodySmall),
       ],
     );
   }

@@ -1,7 +1,7 @@
 import 'dart:math' as math;
-import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 
@@ -18,7 +18,7 @@ class DatePart extends StatefulWidget {
     required this.onComplete,
   });
 
-  final PlayerService player;
+  final AudioPlayback player;
   final AppSettings settings;
   final VoidCallback onComplete;
 
@@ -107,27 +107,27 @@ class _DatePartState extends State<DatePart>
                 children: [
                   Text(
                     'VGR · ONE LIGHT-DAY',
-                    style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                          color: AurumColors.gold,
-                        ),
+                    style: Theme.of(
+                      context,
+                    ).textTheme.labelSmall?.copyWith(color: AurumColors.gold),
                   ),
                   const SizedBox(height: 24),
                   Text(
                     '18 NOVEMBER 2026',
                     textAlign: TextAlign.center,
                     style: Theme.of(context).textTheme.displayMedium?.copyWith(
-                          fontVariations: const <FontVariation>[
-                            FontVariation.weight(600),
-                          ],
-                        ),
+                      fontVariations: const <FontVariation>[
+                        FontVariation.weight(600),
+                      ],
+                    ),
                   ),
                   const SizedBox(height: 18),
                   Text(
                     '10:16:07 UTC',
                     style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                          fontFamily: 'AurumMono',
-                          color: AurumColors.goldLight,
-                        ),
+                      fontFamily: 'AurumMono',
+                      color: AurumColors.goldLight,
+                    ),
                   ),
                   const SizedBox(height: 6),
                   Text(
@@ -148,9 +148,9 @@ class _DatePartState extends State<DatePart>
                   Text(
                     '${numberFormat.format(km.round())} km',
                     style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                          fontFamily: 'AurumMono',
-                          color: AurumColors.gold,
-                        ),
+                      fontFamily: 'AurumMono',
+                      color: AurumColors.gold,
+                    ),
                   ),
                   const SizedBox(height: 10),
                   Opacity(
@@ -170,7 +170,9 @@ class _DatePartState extends State<DatePart>
                           children: [
                             Container(
                               height: 1,
-                              color: AurumColors.goldDark.withValues(alpha: 0.5),
+                              color: AurumColors.goldDark.withValues(
+                                alpha: 0.5,
+                              ),
                             ),
                             FractionallySizedBox(
                               widthFactor: lineProgress,
@@ -219,5 +221,9 @@ class _DatePartState extends State<DatePart>
 double _progress(int value, int span) {
   if (span <= 0) return 1;
   final result = value / span;
-  return result < 0 ? 0 : result > 1 ? 1 : result;
+  return result < 0
+      ? 0
+      : result > 1
+      ? 1
+      : result;
 }

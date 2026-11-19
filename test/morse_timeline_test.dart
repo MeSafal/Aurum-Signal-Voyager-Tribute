@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:voyger/core/morse/morse_timeline.dart';
+import 'package:aurum_signal/core/morse/morse_timeline.dart';
 
 double _fastestCycle(MorseTimeline timeline) {
   var fastest = 0.0;
@@ -32,7 +32,10 @@ void main() {
 
   test('word boundaries are recorded', () {
     final timeline = MorseTimeline(text: 'VGR VOYAGER');
-    expect(timeline.words.map((word) => word.text).toList(), ['VGR', 'VOYAGER']);
+    expect(timeline.words.map((word) => word.text).toList(), [
+      'VGR',
+      'VOYAGER',
+    ]);
     expect(timeline.events.first.wordIndex, 0);
     expect(timeline.events.last.wordIndex, 1);
   });

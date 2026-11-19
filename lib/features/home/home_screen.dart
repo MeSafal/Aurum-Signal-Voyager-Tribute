@@ -39,7 +39,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   void _scrollTo(GlobalKey key) {
     final box = key.currentContext?.findRenderObject() as RenderBox?;
     if (box == null) return;
-    final position = box.localToGlobal(Offset.zero).dy + _scrollController.offset;
+    final position =
+        box.localToGlobal(Offset.zero).dy + _scrollController.offset;
     _scrollController.animateTo(
       position - 40,
       duration: const Duration(milliseconds: 700),
@@ -71,7 +72,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       body: Stack(
         children: [
           const Starfield(starCount: 90),
-          Positioned.fill(child: RecordWatermark(scrollController: _scrollController)),
+          Positioned.fill(
+            child: RecordWatermark(scrollController: _scrollController),
+          ),
           SafeArea(
             child: SingleChildScrollView(
               controller: _scrollController,
@@ -91,9 +94,15 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                         },
                       ),
                       const SizedBox(height: 56),
-                      const ScrollReveal(child: LiveDistance()),
+                      ScrollReveal(
+                        scrollController: _scrollController,
+                        child: const LiveDistance(),
+                      ),
                       const SizedBox(height: 84),
-                      const ScrollReveal(child: SignalJourney()),
+                      ScrollReveal(
+                        scrollController: _scrollController,
+                        child: const SignalJourney(),
+                      ),
                       const SizedBox(height: 84),
                       JourneyTimeline(scrollController: _scrollController),
                       const SizedBox(height: 84),
@@ -121,10 +130,16 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                       const SizedBox(height: 84),
                       Container(
                         key: _dotKey,
-                        child: const ScrollReveal(child: PaleBlueDotSection()),
+                        child: ScrollReveal(
+                          scrollController: _scrollController,
+                          child: const PaleBlueDotSection(),
+                        ),
                       ),
                       const SizedBox(height: 84),
-                      const ScrollReveal(child: AboutTeaser()),
+                      ScrollReveal(
+                        scrollController: _scrollController,
+                        child: const AboutTeaser(),
+                      ),
                       const SizedBox(height: 40),
                       Text(
                         VoyagerFacts.symbolicNote,
@@ -186,9 +201,9 @@ class _HeroHeader extends StatelessWidget {
               Text(
                 'AURUM SIGNAL',
                 style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                      color: AurumColors.gold,
-                      fontSize: 12,
-                    ),
+                  color: AurumColors.gold,
+                  fontSize: 12,
+                ),
               ),
               const SizedBox(height: 10),
               Text(
@@ -221,7 +236,10 @@ class AboutTeaser extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        const SectionHeader(eyebrow: '06 · About', title: 'Credits & settings.'),
+        const SectionHeader(
+          eyebrow: '06 · About',
+          title: 'Credits & settings.',
+        ),
         const SizedBox(height: 18),
         Text(
           'Images: NASA/JPL-Caltech. An unofficial fan tribute, not '

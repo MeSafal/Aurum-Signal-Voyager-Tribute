@@ -89,7 +89,22 @@ const List<Planet> kPlanetLineup = [
 const List<Planet> kLadderBodies = [
   Planet(name: 'Sun', diameterKm: 1391400, distanceAu: 0, color: 0xFFF2C14E),
   Planet(name: 'Earth', diameterKm: 12742, distanceAu: 1, color: 0xFF4C8FD6),
-  Planet(name: 'Jupiter', diameterKm: 139820, distanceAu: 5.203, color: 0xFFC89A6A),
-  Planet(name: 'Saturn', diameterKm: 116460, distanceAu: 9.537, color: 0xFFD9C184),
-  Planet(name: 'Neptune', diameterKm: 49244, distanceAu: 30.07, color: 0xFF5C7FD1),
+  Planet(
+    name: 'Jupiter',
+    diameterKm: 139820,
+    distanceAu: 5.203,
+    color: 0xFFC89A6A,
+  ),
+  Planet(
+    name: 'Saturn',
+    diameterKm: 116460,
+    distanceAu: 9.537,
+    color: 0xFFD9C184,
+  ),
+  Planet(
+    name: 'Neptune',
+    diameterKm: 49244,
+    distanceAu: 30.07,
+    color: 0xFF5C7FD1,
+  ),
 ];

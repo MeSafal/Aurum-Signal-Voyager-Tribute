@@ -23,41 +23,47 @@ const List<_Milestone> _milestones = [
   _Milestone(
     date: VoyagerFacts.launchDate,
     title: 'Launch',
-    body: 'Voyager 1 leaves Earth on a Titan IIIE-Centaur, beginning a '
+    body:
+        'Voyager 1 leaves Earth on a Titan IIIE-Centaur, beginning a '
         'grand tour of the outer planets.',
     image: 'assets/images/family_portrait.jpg',
   ),
   _Milestone(
     date: VoyagerFacts.jupiterDate,
     title: 'Jupiter',
-    body: 'Close flyby, new images of the giant planet and its moons, and a '
+    body:
+        'Close flyby, new images of the giant planet and its moons, and a '
         'gravity assist toward Saturn.',
     image: 'assets/images/jupiter_v1.jpg',
   ),
   _Milestone(
     date: VoyagerFacts.saturnDate,
     title: 'Saturn',
-    body: 'A pass about ${VoyagerFacts.saturnDistance} above the cloud tops, '
+    body:
+        'A pass about ${VoyagerFacts.saturnDistance} above the cloud tops, '
         'then a trajectory out of the ecliptic.',
     image: 'assets/images/saturn_v1.jpg',
   ),
   _Milestone(
     date: VoyagerFacts.paleBlueDotDate,
     title: 'Pale Blue Dot',
-    body: 'From about ${VoyagerFacts.paleBlueDotDistance}, the camera turns '
+    body:
+        'From about ${VoyagerFacts.paleBlueDotDistance}, the camera turns '
         'back for one last portrait before being switched off.',
     image: 'assets/images/pale_blue_dot_1990.jpg',
   ),
   _Milestone(
     date: VoyagerFacts.heliopauseDate,
     title: 'Heliopause',
-    body: 'Plasma-wave measurements mark the crossing into interstellar '
+    body:
+        'Plasma-wave measurements mark the crossing into interstellar '
         'space.',
   ),
   _Milestone(
     date: '18 November 2026',
     title: 'One light-day',
-    body: 'A symbolic distance marker: one full day of radio travel from '
+    body:
+        'A symbolic distance marker: one full day of radio travel from '
         'Earth.',
   ),
 ];
@@ -81,7 +87,10 @@ class JourneyTimeline extends StatelessWidget {
           ScrollReveal(
             scrollController: scrollController,
             delay: Duration(milliseconds: i * 70),
-            child: _MilestoneCard(milestone: _milestones[i], isLast: i == _milestones.length - 1),
+            child: _MilestoneCard(
+              milestone: _milestones[i],
+              isLast: i == _milestones.length - 1,
+            ),
           ),
       ],
     );
@@ -134,9 +143,9 @@ class _MilestoneCard extends StatelessWidget {
               children: [
                 Text(
                   milestone.date.toUpperCase(),
-                  style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                        color: AurumColors.gold,
-                      ),
+                  style: Theme.of(
+                    context,
+                  ).textTheme.labelSmall?.copyWith(color: AurumColors.gold),
                 ),
                 const SizedBox(height: 8),
                 Text(
@@ -144,7 +153,10 @@ class _MilestoneCard extends StatelessWidget {
                   style: Theme.of(context).textTheme.headlineSmall,
                 ),
                 const SizedBox(height: 8),
-                Text(milestone.body, style: Theme.of(context).textTheme.bodyMedium),
+                Text(
+                  milestone.body,
+                  style: Theme.of(context).textTheme.bodyMedium,
+                ),
                 if (milestone.image != null) ...[
                   const SizedBox(height: 14),
                   ClipRRect(

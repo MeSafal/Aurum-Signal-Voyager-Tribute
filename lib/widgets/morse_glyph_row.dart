@@ -129,5 +129,9 @@ class _Glyph extends StatelessWidget {
     );
   }
 
-  double _clamp(double value) => value < 0 ? 0 : value > 1 ? 1 : value;
+  double _clamp(double value) => value < 0
+      ? 0
+      : value > 1
+      ? 1
+      : value;
 }

@@ -1,6 +1,6 @@
 {
-    "name": "voyger",
-    "short_name": "voyger",
+    "name": "Aurum Signal",
+    "short_name": "Aurum",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

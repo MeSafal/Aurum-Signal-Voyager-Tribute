@@ -22,7 +22,8 @@ Uint8List generateMorseWav(MorseTimeline timeline) {
           ? 1.0
           : math.min(1.0, (length - 1 - i) / attackSamples);
       final envelope = math.min(rise, fall);
-      samples[start + i] += kMorseAmplitude *
+      samples[start + i] +=
+          kMorseAmplitude *
           envelope *
           math.sin(2 * math.pi * kMorseFrequency * i / kSampleRate);
     }
@@ -40,8 +41,6 @@ Uint8List generateBurstWav({int durationMs = 2200}) {
 
   for (var i = 0; i < sampleCount; i++) {
     final t = i / kSampleRate;
-    final progress = (t / durationSeconds).clamp(0.0, 1.0);
-    final frequency = 48 + 30 * progress;
     final phase = 2 * math.pi * (48 * t + 15 * t * t / durationSeconds);
     final envelope = math.exp(-1.4 * t) * math.min(1.0, t / 0.08);
     final swell = 0.46 * envelope * math.sin(phase);

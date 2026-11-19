@@ -1,7 +1,7 @@
 import 'dart:io';
 
-import 'package:voyger/core/audio/synth.dart';
-import 'package:voyger/core/morse/morse_timeline.dart';
+import 'package:aurum_signal/core/audio/synth.dart';
+import 'package:aurum_signal/core/morse/morse_timeline.dart';
 
 void main() {
   final output = Directory('assets/audio');
@@ -13,7 +13,9 @@ void main() {
   final voyager = MorseTimeline(text: 'VOYAGER');
 
   File('${output.path}/vgr_morse.wav').writeAsBytesSync(generateMorseWav(vgr));
-  File('${output.path}/vgr_voyager.wav').writeAsBytesSync(generateMorseWav(voyager));
+  File(
+    '${output.path}/vgr_voyager.wav',
+  ).writeAsBytesSync(generateMorseWav(voyager));
   File('${output.path}/vgr_burst.wav').writeAsBytesSync(generateBurstWav());
 
   stdout.writeln('Wrote vgr_morse.wav (${vgr.totalMs} ms)');

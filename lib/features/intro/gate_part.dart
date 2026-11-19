@@ -80,7 +80,8 @@ class _GatePartState extends State<GatePart>
                       const SizedBox(height: 48),
                       Text(
                         'Touch to transmit',
-                        style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                        style: Theme.of(context).textTheme.headlineSmall
+                            ?.copyWith(
                               color: AurumColors.goldLight,
                               letterSpacing: 1.2,
                             ),

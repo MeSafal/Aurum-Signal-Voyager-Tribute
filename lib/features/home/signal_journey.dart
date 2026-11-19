@@ -1,11 +1,8 @@
-import 'dart:math' as math;
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
 import '../../app/theme.dart';
-import '../../core/data/ephemeris.dart';
 import '../../core/data/facts.dart';
 import '../../core/data/providers.dart';
 import '../../widgets/section_header.dart';
@@ -61,7 +58,7 @@ class _SignalJourneyState extends ConsumerState<SignalJourney>
             height: 90,
             child: Center(child: CircularProgressIndicator()),
           ),
-          error: (_, __) => Text(
+          error: (_, _) => Text(
             'Using NASA milestone: 24 h one way, 48 h round trip.',
             style: Theme.of(context).textTheme.bodyMedium,
           ),
@@ -108,7 +105,8 @@ class _SignalJourneyState extends ConsumerState<SignalJourney>
                       ),
                     ),
                     Positioned(
-                      left: progress * (MediaQuery.sizeOf(context).width - 80) -
+                      left:
+                          progress * (MediaQuery.sizeOf(context).width - 80) -
                           5,
                       child: Container(
                         width: 10,
@@ -125,14 +123,20 @@ class _SignalJourneyState extends ConsumerState<SignalJourney>
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text('EARTH', style: Theme.of(context).textTheme.labelSmall),
+                    Text(
+                      'EARTH',
+                      style: Theme.of(context).textTheme.labelSmall,
+                    ),
                     Text(
                       '${(VoyagerFacts.oneWayHours).round()} H OF LIGHT',
-                      style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                            color: AurumColors.gold,
-                          ),
+                      style: Theme.of(
+                        context,
+                      ).textTheme.labelSmall?.copyWith(color: AurumColors.gold),
                     ),
-                    Text('VOYAGER', style: Theme.of(context).textTheme.labelSmall),
+                    Text(
+                      'VOYAGER',
+                      style: Theme.of(context).textTheme.labelSmall,
+                    ),
                   ],
                 ),
               ],
@@ -168,9 +172,9 @@ class _ArrivalRow extends StatelessWidget {
             child: Text(
               time,
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    fontFamily: 'AurumMono',
-                    color: AurumColors.goldLight,
-                  ),
+                fontFamily: 'AurumMono',
+                color: AurumColors.goldLight,
+              ),
             ),
           ),
         ),

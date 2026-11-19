@@ -29,6 +29,9 @@ const Map<String, String> morseCodes = {
 
 String morseFor(String letter) => morseCodes[letter.toUpperCase()] ?? '';
 
-String describeMorse(String letter) => morseFor(letter).split('').map((symbol) {
+String describeMorse(String letter) => morseFor(letter)
+    .split('')
+    .map((symbol) {
       return symbol == '.' ? 'dot' : 'dash';
-    }).join(' ');
+    })
+    .join(' ');

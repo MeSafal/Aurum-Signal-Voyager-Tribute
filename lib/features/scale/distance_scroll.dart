@@ -98,15 +98,12 @@ class DistanceScroll extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(
-              '0 AU',
-              style: Theme.of(context).textTheme.labelSmall,
-            ),
+            Text('0 AU', style: Theme.of(context).textTheme.labelSmall),
             Text(
               '${VoyagerFacts.milestoneAu.toStringAsFixed(2)} AU',
-              style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                    color: AurumColors.gold,
-                  ),
+              style: Theme.of(
+                context,
+              ).textTheme.labelSmall?.copyWith(color: AurumColors.gold),
             ),
           ],
         ),
@@ -145,23 +142,27 @@ class _Marker extends StatelessWidget {
               label,
               textAlign: TextAlign.center,
               style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                    color: highlight ? AurumColors.gold : null,
-                  ),
+                color: highlight ? AurumColors.gold : null,
+              ),
             ),
           ),
           const SizedBox(height: 10),
           child,
           const SizedBox(height: 10),
-          Container(width: 1, height: 28, color: AurumColors.gold.withValues(alpha: 0.24)),
+          Container(
+            width: 1,
+            height: 28,
+            color: AurumColors.gold.withValues(alpha: 0.24),
+          ),
           const SizedBox(height: 6),
           SizedBox(
             width: 96,
             child: Text(
               '${au.toStringAsFixed(au < 10 ? 2 : 1)} AU',
               textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    fontFamily: 'AurumMono',
-                  ),
+              style: Theme.of(
+                context,
+              ).textTheme.bodySmall?.copyWith(fontFamily: 'AurumMono'),
             ),
           ),
         ],

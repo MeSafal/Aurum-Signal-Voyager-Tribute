@@ -6,10 +6,7 @@ class IntroState {
   final IntroPhase phase;
   final bool skipVisible;
 
-  const IntroState({
-    this.phase = IntroPhase.gate,
-    this.skipVisible = false,
-  });
+  const IntroState({this.phase = IntroPhase.gate, this.skipVisible = false});
 
   IntroState copyWith({IntroPhase? phase, bool? skipVisible}) {
     return IntroState(
@@ -19,8 +16,9 @@ class IntroState {
   }
 }
 
-final introControllerProvider =
-    NotifierProvider<IntroController, IntroState>(IntroController.new);
+final introControllerProvider = NotifierProvider<IntroController, IntroState>(
+  IntroController.new,
+);
 
 class IntroController extends Notifier<IntroState> {
   @override
@@ -37,13 +35,11 @@ class IntroController extends Notifier<IntroState> {
 
   void toVoyager() => state = state.copyWith(phase: IntroPhase.voyager);
 
-  void toExit() => state = state.copyWith(
-        phase: IntroPhase.exit,
-        skipVisible: false,
-      );
+  void toExit() =>
+      state = state.copyWith(phase: IntroPhase.exit, skipVisible: false);
 
-  void finish() => state = state.copyWith(
-        phase: IntroPhase.done,
-        skipVisible: false,
-      );
+  void finish() =>
+      state = state.copyWith(phase: IntroPhase.done, skipVisible: false);
+
+  void resetIntro() => state = const IntroState();
 }

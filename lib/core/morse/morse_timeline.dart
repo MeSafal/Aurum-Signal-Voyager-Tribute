@@ -67,7 +67,10 @@ class MorseTimeline {
     Map<String, String> codes = morseCodes,
   }) {
     final normalized = text.toUpperCase();
-    final tokens = normalized.split(RegExp(r'\s+')).where((word) => word.isNotEmpty).toList();
+    final tokens = normalized
+        .split(RegExp(r'\s+'))
+        .where((word) => word.isNotEmpty)
+        .toList();
     final allEvents = <MorseEvent>[];
     final letterSpans = <MorseSpan>[];
     final wordSpans = <MorseSpan>[];
@@ -78,7 +81,11 @@ class MorseTimeline {
       final word = tokens[wordIndex];
       final wordStart = cursor;
 
-      for (var wordLetterIndex = 0; wordLetterIndex < word.length; wordLetterIndex++) {
+      for (
+        var wordLetterIndex = 0;
+        wordLetterIndex < word.length;
+        wordLetterIndex++
+      ) {
         final letter = word[wordLetterIndex];
         final code = codes[letter] ?? '';
         final letterStart = cursor;

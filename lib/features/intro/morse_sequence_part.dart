@@ -1,10 +1,9 @@
 import 'dart:math' as math;
-import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 
-import '../../../app/motion.dart';
 import '../../../app/theme.dart';
 import '../../../core/audio/player_service.dart';
 import '../../../core/morse/morse_timeline.dart';
@@ -25,7 +24,7 @@ class MorseSequencePart extends StatefulWidget {
 
   final MorseTimeline timeline;
   final String audioAsset;
-  final PlayerService player;
+  final AudioPlayback player;
   final AppSettings settings;
   final VoidCallback onComplete;
   final int tailMs;
@@ -39,7 +38,6 @@ class _MorseSequencePartState extends State<MorseSequencePart>
     with SingleTickerProviderStateMixin {
   late final Ticker _ticker;
   final ValueNotifier<int> _elapsed = ValueNotifier<int>(0);
-  late final DateTime _anchor;
   int _lastEventIndex = -1;
   bool _started = false;
   bool _finished = false;
@@ -47,7 +45,6 @@ class _MorseSequencePartState extends State<MorseSequencePart>
   @override
   void initState() {
     super.initState();
-    _anchor = DateTime.now();
     _ticker = createTicker(_onTick);
     _loadAndPlay();
   }
@@ -150,10 +147,7 @@ class _VgrLayout extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final captionOpacity = _progress(
-      nowMs - (timeline.totalMs - 200),
-      700,
-    );
+    final captionOpacity = _progress(nowMs - (timeline.totalMs - 200), 700);
     return Center(
       child: FittedBox(
         fit: BoxFit.scaleDown,
@@ -260,12 +254,17 @@ class _Letter extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final active = span != null &&
-        nowMs >= span!.startMs &&
-        nowMs < span!.endMs + 160;
+    final active =
+        span != null && nowMs >= span!.startMs && nowMs < span!.endMs + 160;
     final completed = span != null && nowMs >= span!.endMs;
     final emphasis = active ? _progress(nowMs - span!.startMs, 160) : 0.0;
-    final opacity = span == null ? 1.0 : active ? 0.35 + 0.65 * emphasis : completed ? 1 : 0.35;
+    final opacity = span == null
+        ? 1.0
+        : active
+        ? 0.35 + 0.65 * emphasis
+        : completed
+        ? 1.0
+        : 0.35;
     final scale = reduceMotion || !active ? 1.0 : 1 + 0.04 * emphasis;
 
     return Transform.scale(
@@ -277,15 +276,16 @@ class _Letter extends StatelessWidget {
           children: [
             Text(
               letter,
-              style: (large
-                      ? Theme.of(context).textTheme.displayLarge
-                      : Theme.of(context).textTheme.displayMedium)
-                  ?.copyWith(
-                    color: color ?? AurumColors.text,
-                    fontVariations: const <FontVariation>[
-                      FontVariation.weight(600),
-                    ],
-                  ),
+              style:
+                  (large
+                          ? Theme.of(context).textTheme.displayLarge
+                          : Theme.of(context).textTheme.displayMedium)
+                      ?.copyWith(
+                        color: color ?? AurumColors.text,
+                        fontVariations: const <FontVariation>[
+                          FontVariation.weight(600),
+                        ],
+                      ),
             ),
             const SizedBox(height: 18),
             MorseGlyphRow(
@@ -307,5 +307,9 @@ class _Letter extends StatelessWidget {
 double _progress(int value, int span) {
   if (span <= 0) return 1;
   final result = value / span;
-  return result < 0 ? 0 : result > 1 ? 1 : result;
+  return result < 0
+      ? 0
+      : result > 1
+      ? 1
+      : result;
 }

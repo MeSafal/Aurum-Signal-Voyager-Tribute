@@ -37,8 +37,9 @@ class AppSettings {
   }
 }
 
-final settingsProvider =
-    NotifierProvider<SettingsNotifier, AppSettings>(SettingsNotifier.new);
+final settingsProvider = NotifierProvider<SettingsNotifier, AppSettings>(
+  SettingsNotifier.new,
+);
 
 class SettingsNotifier extends Notifier<AppSettings> {
   static const _soundKey = 'settings.sound';
@@ -65,8 +66,11 @@ class SettingsNotifier extends Notifier<AppSettings> {
   Future<void> setHaptics(bool value) =>
       _write(_hapticsKey, value, next: state.copyWith(hapticsOn: value));
 
-  Future<void> setReduceMotion(bool value) =>
-      _write(_reduceMotionKey, value, next: state.copyWith(reduceMotion: value));
+  Future<void> setReduceMotion(bool value) => _write(
+    _reduceMotionKey,
+    value,
+    next: state.copyWith(reduceMotion: value),
+  );
 
   Future<void> setLatencyOffsetMs(int value) =>
       _write(_latencyKey, value, next: state.copyWith(latencyOffsetMs: value));
@@ -77,7 +81,11 @@ class SettingsNotifier extends Notifier<AppSettings> {
   Future<void> resetIntro() =>
       _write(_introSeenKey, false, next: state.copyWith(introSeen: false));
 
-  Future<void> _write(String key, Object value, {required AppSettings next}) async {
+  Future<void> _write(
+    String key,
+    Object value, {
+    required AppSettings next,
+  }) async {
     final prefs = ref.read(sharedPreferencesProvider);
     if (value is bool) {
       await prefs.setBool(key, value);

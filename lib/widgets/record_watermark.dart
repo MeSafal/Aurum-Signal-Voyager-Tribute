@@ -77,11 +77,7 @@ class _VectorRecordPainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     final center = Offset(size.width / 2, size.height / 2);
     final radius = size.shortestSide / 2;
-    canvas.drawCircle(
-      center,
-      radius,
-      Paint()..color = const Color(0xFF0C0F20),
-    );
+    canvas.drawCircle(center, radius, Paint()..color = const Color(0xFF0C0F20));
     for (var i = 1; i <= 9; i++) {
       canvas.drawCircle(
         center,

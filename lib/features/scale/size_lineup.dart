@@ -14,7 +14,9 @@ class SizeLineup extends StatelessWidget {
   Widget build(BuildContext context) {
     final sun = kPlanetLineup.first;
     final planets = kPlanetLineup.skip(1).toList();
-    final largestPlanet = planets.firstWhere((planet) => planet.name == 'Jupiter');
+    final largestPlanet = planets.firstWhere(
+      (planet) => planet.name == 'Jupiter',
+    );
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -35,7 +37,9 @@ class SizeLineup extends StatelessWidget {
           children: [
             _ScaledBody(planet: sun, size: sunPixels),
             _ScaledBody(
-              planet: kPlanetLineup.firstWhere((planet) => planet.name == 'Earth'),
+              planet: kPlanetLineup.firstWhere(
+                (planet) => planet.name == 'Earth',
+              ),
               size: sunPixels * 12742 / sun.diameterKm,
             ),
             _ScaledBody(
@@ -134,9 +138,9 @@ class _ScaledBody extends StatelessWidget {
         if (size < 8)
           Text(
             'shown at minimum size',
-            style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                  fontSize: 8,
-                ),
+            style: Theme.of(
+              context,
+            ).textTheme.labelSmall?.copyWith(fontSize: 8),
           ),
       ],
     );

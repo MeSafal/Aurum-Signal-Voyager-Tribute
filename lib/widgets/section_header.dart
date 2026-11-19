@@ -23,23 +23,17 @@ class SectionHeader extends StatelessWidget {
           children: [
             Text(
               eyebrow.toUpperCase(),
-              style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                    color: AurumColors.gold,
-                  ),
+              style: Theme.of(
+                context,
+              ).textTheme.labelSmall?.copyWith(color: AurumColors.gold),
             ),
             const SizedBox(width: 16),
             const Expanded(child: Divider()),
-            if (trailing != null) ...[
-              const SizedBox(width: 16),
-              trailing!,
-            ],
+            if (trailing != null) ...[const SizedBox(width: 16), trailing!],
           ],
         ),
         const SizedBox(height: 20),
-        Text(
-          title,
-          style: Theme.of(context).textTheme.displaySmall,
-        ),
+        Text(title, style: Theme.of(context).textTheme.displaySmall),
       ],
     );
   }

@@ -5,7 +5,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
 import '../../app/theme.dart';
-import '../../core/data/ephemeris.dart';
 import '../../core/data/facts.dart';
 import '../../core/data/providers.dart';
 import '../../widgets/section_header.dart';
@@ -70,7 +69,8 @@ class _LiveDistanceState extends ConsumerState<LiveDistance> {
             final beyond = !_now.isBefore(VoyagerFacts.milestoneUtc);
 
             return Semantics(
-              label: 'Voyager 1 is ${number.format(km.round())} '
+              label:
+                  'Voyager 1 is ${number.format(km.round())} '
                   'kilometres from Earth',
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -81,9 +81,9 @@ class _LiveDistanceState extends ConsumerState<LiveDistance> {
                     child: Text(
                       number.format(km.round()),
                       style: Theme.of(context).textTheme.displayLarge?.copyWith(
-                            fontFamily: 'AurumMono',
-                            color: AurumColors.goldLight,
-                          ),
+                        fontFamily: 'AurumMono',
+                        color: AurumColors.goldLight,
+                      ),
                     ),
                   ),
                   const SizedBox(height: 8),
@@ -96,14 +96,19 @@ class _LiveDistanceState extends ConsumerState<LiveDistance> {
                     spacing: 12,
                     runSpacing: 12,
                     children: [
-                      _Stat(label: 'DISTANCE', value: '${au.toStringAsFixed(2)} AU'),
+                      _Stat(
+                        label: 'DISTANCE',
+                        value: '${au.toStringAsFixed(2)} AU',
+                      ),
                       _Stat(
                         label: 'LIGHT TIME',
-                        value: '${hours}h ${minutes.toString().padLeft(2, '0')}m',
+                        value:
+                            '${hours}h ${minutes.toString().padLeft(2, '0')}m',
                       ),
                       _Stat(
                         label: 'SIGNAL DELAY',
-                        value: '${(hours * 2)}h ${minutes.toString().padLeft(2, '0')}m round trip',
+                        value:
+                            '${(hours * 2)}h ${minutes.toString().padLeft(2, '0')}m round trip',
                       ),
                     ],
                   ),
@@ -113,8 +118,8 @@ class _LiveDistanceState extends ConsumerState<LiveDistance> {
                         ? 'Beyond one light-day.'
                         : 'Approaching one light-day.',
                     style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                          color: AurumColors.gold,
-                        ),
+                      color: AurumColors.gold,
+                    ),
                   ),
                 ],
               ),
@@ -148,9 +153,9 @@ class _Stat extends StatelessWidget {
           const SizedBox(height: 6),
           Text(
             value,
-            style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                  fontFamily: 'AurumMono',
-                ),
+            style: Theme.of(
+              context,
+            ).textTheme.titleMedium?.copyWith(fontFamily: 'AurumMono'),
           ),
         ],
       ),
