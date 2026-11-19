@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../app/theme.dart';
-
 class SectionHeader extends StatelessWidget {
   const SectionHeader({
     super.key,
@@ -19,21 +17,13 @@ class SectionHeader extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Row(
-          children: [
-            Text(
-              eyebrow.toUpperCase(),
-              style: Theme.of(
-                context,
-              ).textTheme.labelSmall?.copyWith(color: AurumColors.gold),
-            ),
-            const SizedBox(width: 16),
-            const Expanded(child: Divider()),
-            if (trailing != null) ...[const SizedBox(width: 16), trailing!],
-          ],
+        Text(
+          eyebrow.toUpperCase(),
+          style: Theme.of(context).textTheme.labelSmall,
         ),
-        const SizedBox(height: 20),
-        Text(title, style: Theme.of(context).textTheme.displaySmall),
+        const SizedBox(height: 12),
+        Text(title, style: Theme.of(context).textTheme.headlineMedium),
+        if (trailing != null) ...[const SizedBox(height: 12), trailing!],
       ],
     );
   }

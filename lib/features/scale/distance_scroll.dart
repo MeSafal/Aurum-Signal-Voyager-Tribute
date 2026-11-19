@@ -9,12 +9,14 @@ import '../../widgets/section_header.dart';
 class DistanceScroll extends StatelessWidget {
   const DistanceScroll({super.key});
 
-  static const double pixelsPerAu = 24;
+  static const double pixelsPerAu = 90;
   static const double endAu = VoyagerFacts.milestoneAu + 4;
 
   @override
   Widget build(BuildContext context) {
-    final markers = kPlanetLineup.where((planet) => planet.distanceAu > 0);
+    final markers = kPlanetLineup
+        .where((planet) => planet.distanceAu > 0)
+        .toList();
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -50,17 +52,19 @@ class DistanceScroll extends StatelessWidget {
                         color: AurumColors.gold.withValues(alpha: 0.3),
                       ),
                     ),
-                    for (final planet in markers)
+                    for (final item in markers.asMap().entries)
                       _Marker(
-                        x: planet.distanceAu * pixelsPerAu,
-                        label: planet.name,
-                        au: planet.distanceAu,
-                        child: PlanetDisc(planet: planet, size: 22),
+                        x: item.value.distanceAu * pixelsPerAu,
+                        label: item.value.name,
+                        au: item.value.distanceAu,
+                        labelAbove: item.key < 4 && item.key.isEven,
+                        child: PlanetDisc(planet: item.value, size: 22),
                       ),
                     _Marker(
                       x: 0,
                       label: 'Sun',
                       au: 0,
+                      labelAbove: true,
                       child: PlanetDisc(planet: kPlanetLineup.first, size: 28),
                     ),
                     Positioned(
@@ -119,6 +123,7 @@ class _Marker extends StatelessWidget {
     required this.au,
     required this.child,
     this.highlight = false,
+    this.labelAbove = false,
   });
 
   final double x;
@@ -126,46 +131,64 @@ class _Marker extends StatelessWidget {
   final double au;
   final Widget child;
   final bool highlight;
+  final bool labelAbove;
 
   @override
   Widget build(BuildContext context) {
+    final caption = Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        SizedBox(
+          width: 88,
+          child: Text(
+            label,
+            textAlign: TextAlign.center,
+            style: Theme.of(context).textTheme.labelSmall?.copyWith(
+              color: highlight ? AurumColors.gold : null,
+            ),
+          ),
+        ),
+        const SizedBox(height: 4),
+        SizedBox(
+          width: 88,
+          child: Text(
+            '${au.toStringAsFixed(au < 10 ? 2 : 1)} AU',
+            textAlign: TextAlign.center,
+            style: Theme.of(
+              context,
+            ).textTheme.bodySmall?.copyWith(fontFamily: 'AurumMono'),
+          ),
+        ),
+      ],
+    );
+    final stem = Container(
+      width: 1,
+      height: 28,
+      color: AurumColors.gold.withValues(alpha: 0.24),
+    );
+    final children = labelAbove
+        ? <Widget>[
+            caption,
+            const SizedBox(height: 10),
+            child,
+            const SizedBox(height: 10),
+            stem,
+          ]
+        : <Widget>[
+            child,
+            const SizedBox(height: 10),
+            stem,
+            const SizedBox(height: 6),
+            caption,
+          ];
+
     return Positioned(
       left: x,
       top: 0,
       bottom: 0,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          SizedBox(
-            width: 96,
-            child: Text(
-              label,
-              textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                color: highlight ? AurumColors.gold : null,
-              ),
-            ),
-          ),
-          const SizedBox(height: 10),
-          child,
-          const SizedBox(height: 10),
-          Container(
-            width: 1,
-            height: 28,
-            color: AurumColors.gold.withValues(alpha: 0.24),
-          ),
-          const SizedBox(height: 6),
-          SizedBox(
-            width: 96,
-            child: Text(
-              '${au.toStringAsFixed(au < 10 ? 2 : 1)} AU',
-              textAlign: TextAlign.center,
-              style: Theme.of(
-                context,
-              ).textTheme.bodySmall?.copyWith(fontFamily: 'AurumMono'),
-            ),
-          ),
-        ],
+        children: children,
       ),
     );
   }

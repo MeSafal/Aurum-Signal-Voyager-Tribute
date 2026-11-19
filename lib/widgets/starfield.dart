@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import '../app/theme.dart';
 
 class Starfield extends StatefulWidget {
-  const Starfield({super.key, this.starCount = 110});
+  const Starfield({super.key, this.starCount = 60});
 
   final int starCount;
 
@@ -30,8 +30,8 @@ class _StarfieldState extends State<Starfield>
       return _Star(
         x: random.nextDouble(),
         y: random.nextDouble(),
-        radius: 0.5 + random.nextDouble() * 1.1,
-        opacity: 0.14 + random.nextDouble() * 0.4,
+        radius: 0.4 + random.nextDouble() * 0.7,
+        opacity: 0.06 + random.nextDouble() * 0.16,
       );
     });
   }

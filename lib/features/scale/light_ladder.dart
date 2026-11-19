@@ -55,7 +55,9 @@ class _LightRow extends StatelessWidget {
     final minutes = VoyagerFacts.lightMinutesForAu(row.au);
     final hours = (minutes / 60).floor();
     final rest = minutes - hours * 60;
-    final label = hours == 0
+    final label = minutes >= 1440
+        ? '${(minutes / 1440).toStringAsFixed(2)} day'
+        : hours == 0
         ? '${minutes.round()} min'
         : '$hours h ${rest.round().toString().padLeft(2, '0')} m';
     final width = (minutes / 1440).clamp(0.02, 1.0).toDouble();
@@ -72,11 +74,20 @@ class _LightRow extends StatelessWidget {
           ),
           const SizedBox(width: 10),
           SizedBox(
-            width: 86,
-            child: Text(
-              row.name,
-              style: Theme.of(context).textTheme.bodySmall,
-              overflow: TextOverflow.ellipsis,
+            width: 104,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  row.name,
+                  style: Theme.of(context).textTheme.bodySmall,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                Text(
+                  '${row.au.toStringAsFixed(row.au < 10 ? 2 : 1)} AU',
+                  style: Theme.of(context).textTheme.labelSmall,
+                ),
+              ],
             ),
           ),
           Expanded(
@@ -100,7 +111,7 @@ class _LightRow extends StatelessWidget {
           ),
           const SizedBox(width: 14),
           SizedBox(
-            width: 96,
+            width: 112,
             child: Text(
               label,
               textAlign: TextAlign.right,

@@ -3,56 +3,33 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
 import '../../app/theme.dart';
-import '../../core/data/facts.dart';
 import '../../core/data/providers.dart';
+import '../../core/settings/settings_provider.dart';
 import '../../widgets/section_header.dart';
 
-class SignalJourney extends ConsumerStatefulWidget {
+class SignalJourney extends ConsumerWidget {
   const SignalJourney({super.key});
 
   @override
-  ConsumerState<SignalJourney> createState() => _SignalJourneyState();
-}
-
-class _SignalJourneyState extends ConsumerState<SignalJourney>
-    with SingleTickerProviderStateMixin {
-  late final AnimationController _pulse;
-
-  @override
-  void initState() {
-    super.initState();
-    _pulse = AnimationController(
-      vsync: this,
-      duration: const Duration(seconds: 8),
-    )..repeat();
-  }
-
-  @override
-  void dispose() {
-    _pulse.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final now = DateTime.now();
     final ephemeris = ref.watch(ephemerisProvider);
+    final settings = ref.watch(settingsProvider);
+    final notifier = ref.read(settingsProvider.notifier);
+    final hours = settings.journeyHours.clamp(0.0, 48.0).toDouble();
+    final outbound = (hours / 24).clamp(0.0, 1.0).toDouble();
+    final returning = ((hours - 24) / 24).clamp(0.0, 1.0).toDouble();
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        const SectionHeader(
-          eyebrow: '02 · Signal journey',
-          title: 'A message you send now.',
-        ),
+        const SectionHeader(eyebrow: '02 · Signal journey', title: 'SEND NOW.'),
         const SizedBox(height: 20),
         Text(
-          'If Earth sent a radio call this instant, it would reach Voyager 1 '
-          'roughly one day later. A reply could not return before two days '
-          'have passed.',
+          'Drag the signal through its round trip. One day out, one day back.',
           style: Theme.of(context).textTheme.bodyLarge,
         ),
-        const SizedBox(height: 32),
+        const SizedBox(height: 28),
         ephemeris.when(
           loading: () => const SizedBox(
             height: 90,
@@ -83,70 +60,76 @@ class _SignalJourneyState extends ConsumerState<SignalJourney>
             );
           },
         ),
-        const SizedBox(height: 40),
-        AnimatedBuilder(
-          animation: _pulse,
-          builder: (context, _) {
-            final progress = Curves.easeInOutCubic.transform(_pulse.value);
-            return Column(
-              children: [
-                Stack(
-                  alignment: Alignment.centerLeft,
-                  children: [
-                    Container(
-                      height: 1,
-                      color: AurumColors.goldDark.withValues(alpha: 0.5),
-                    ),
-                    FractionallySizedBox(
-                      widthFactor: progress,
-                      child: Container(
-                        height: 1,
-                        color: AurumColors.gold.withValues(alpha: 0.8),
-                      ),
-                    ),
-                    Positioned(
-                      left:
-                          progress * (MediaQuery.sizeOf(context).width - 80) -
-                          5,
-                      child: Container(
-                        width: 10,
-                        height: 10,
-                        decoration: const BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: AurumColors.goldLight,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 12),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      'EARTH',
-                      style: Theme.of(context).textTheme.labelSmall,
-                    ),
-                    Text(
-                      '${(VoyagerFacts.oneWayHours).round()} H OF LIGHT',
-                      style: Theme.of(
-                        context,
-                      ).textTheme.labelSmall?.copyWith(color: AurumColors.gold),
-                    ),
-                    Text(
-                      'VOYAGER',
-                      style: Theme.of(context).textTheme.labelSmall,
-                    ),
-                  ],
-                ),
-              ],
-            );
+        const SizedBox(height: 32),
+        Slider(
+          value: hours,
+          min: 0,
+          max: 48,
+          divisions: 4800,
+          label: '${hours.toStringAsFixed(2)} h',
+          onChanged: (value) {
+            notifier.setJourneyHours(value);
+            if (value >= 48 && !settings.journeyCompleted) {
+              notifier.markJourneyCompleted();
+            }
           },
         ),
-        const SizedBox(height: 18),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text('EARTH', style: Theme.of(context).textTheme.labelSmall),
+            Text(
+              '${hours.toStringAsFixed(2)} H',
+              style: Theme.of(
+                context,
+              ).textTheme.labelSmall?.copyWith(color: AurumColors.gold),
+            ),
+            Text('VOYAGER', style: Theme.of(context).textTheme.labelSmall),
+          ],
+        ),
+        const SizedBox(height: 24),
+        _LegBar(
+          label: hours < 24 ? 'OUTBOUND · EARTH → VOYAGER' : 'OUTBOUND · DONE',
+          value: outbound,
+        ),
+        const SizedBox(height: 12),
+        _LegBar(
+          label: hours < 24
+              ? 'RETURN · WAITING FOR REPLY'
+              : 'RETURN · VOYAGER → EARTH',
+          value: returning,
+        ),
+        const SizedBox(height: 16),
         Text(
-          'A visualisation of light travel — no message is actually sent.',
+          settings.journeyCompleted
+              ? 'Round trip complete. Your celebration appears when you '
+                    'reopen the app.'
+              : 'A visualisation of light travel — no message is actually sent.',
           style: Theme.of(context).textTheme.bodySmall,
+        ),
+      ],
+    );
+  }
+}
+
+class _LegBar extends StatelessWidget {
+  const _LegBar({required this.label, required this.value});
+
+  final String label;
+  final double value;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Text(label, style: Theme.of(context).textTheme.labelSmall),
+        const SizedBox(height: 8),
+        LinearProgressIndicator(
+          value: value,
+          minHeight: 4,
+          backgroundColor: AurumColors.gold.withValues(alpha: 0.12),
+          color: AurumColors.gold,
         ),
       ],
     );

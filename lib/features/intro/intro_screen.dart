@@ -61,7 +61,7 @@ class _IntroScreenState extends ConsumerState<IntroScreen> {
         child: Stack(
           fit: StackFit.expand,
           children: [
-            const Starfield(starCount: 90),
+            const Starfield(starCount: 40),
             AnimatedSwitcher(
               duration: const Duration(milliseconds: 800),
               switchInCurve: Curves.easeInOutCubic,

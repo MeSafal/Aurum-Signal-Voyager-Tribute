@@ -29,8 +29,8 @@ void main() {
       ),
     );
 
-    expect(find.text('Touch to transmit'), findsOneWidget);
-    await tester.tap(find.text('Touch to transmit'));
+    expect(find.text('TAP TO BEGIN'), findsOneWidget);
+    await tester.tap(find.text('TAP TO BEGIN'));
     await tester.pump();
     expect(find.text('V'), findsOneWidget);
     expect(find.text('G'), findsOneWidget);

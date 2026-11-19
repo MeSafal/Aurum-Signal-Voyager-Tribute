@@ -1,5 +1,3 @@
-import 'dart:math' as math;
-
 import 'package:flutter/material.dart';
 
 import '../app/theme.dart';
@@ -71,67 +69,20 @@ class _Glyph extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final sinceStart = nowMs - event.startMs;
-    final untilEnd = event.endMs - nowMs;
-    final active = sinceStart >= -80 && untilEnd >= -120;
-    final rise = _clamp(sinceStart / 80);
-    final fall = _clamp((event.endMs + 120 - nowMs) / 120);
-    final envelope = active ? math.min(rise, fall) : 0.0;
-    final opacity = 0.32 + 0.68 * envelope;
-    final progress = _clamp(sinceStart / event.durationMs);
+    final active = nowMs >= event.startMs && nowMs < event.endMs;
+    final opacity = active ? 1.0 : (reduceMotion ? 0.38 : 0.28);
+    final color = active ? AurumColors.gold : AurumColors.secondary;
     final isDash = event.symbol == MorseSymbol.dash;
-
     final width = isDash ? dashWidth : dotSize;
-    final radius = isDash ? glyphHeight / 2 : dotSize / 2;
-    final rippleOpacity = !reduceMotion && active
-        ? 0.15 * (1 - _clamp(sinceStart / 600))
-        : 0.0;
+    final height = isDash ? glyphHeight : dotSize;
 
-    return SizedBox(
+    return Container(
       width: width,
-      height: glyphHeight,
-      child: Stack(
-        alignment: Alignment.center,
-        children: [
-          if (rippleOpacity > 0.001)
-            Container(
-              width: width + 18 * _clamp(sinceStart / 600),
-              height: glyphHeight + 18 * _clamp(sinceStart / 600),
-              decoration: BoxDecoration(
-                shape: BoxShape.rectangle,
-                borderRadius: BorderRadius.circular(radius + 9),
-                border: Border.all(
-                  color: AurumColors.gold.withValues(alpha: rippleOpacity),
-                ),
-              ),
-            ),
-          Container(
-            width: width,
-            height: isDash ? glyphHeight : dotSize,
-            decoration: BoxDecoration(
-              color: AurumColors.gold.withValues(alpha: 0.14),
-              borderRadius: BorderRadius.circular(radius),
-            ),
-          ),
-          Align(
-            alignment: Alignment.centerLeft,
-            child: Container(
-              width: isDash ? width * progress : dotSize * envelope,
-              height: isDash ? glyphHeight : dotSize * envelope,
-              decoration: BoxDecoration(
-                color: AurumColors.goldLight.withValues(alpha: opacity),
-                borderRadius: BorderRadius.circular(radius),
-              ),
-            ),
-          ),
-        ],
+      height: height,
+      decoration: BoxDecoration(
+        color: color.withValues(alpha: opacity),
+        borderRadius: BorderRadius.circular(height / 2),
       ),
     );
   }
-
-  double _clamp(double value) => value < 0
-      ? 0
-      : value > 1
-      ? 1
-      : value;
 }

@@ -1,0 +1,10 @@
+{
+    "configurations": [
+        {
+            "name": "Flutter (lib/features/scale/distance_scroll.dart)",
+            "type": "dart",
+            "request": "launch",
+            "program": "lib/features/scale/distance_scroll.dart"
+        }
+    ]
+}

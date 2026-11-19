@@ -71,7 +71,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     return Scaffold(
       body: Stack(
         children: [
-          const Starfield(starCount: 90),
+          const Starfield(starCount: 45),
           Positioned.fill(
             child: RecordWatermark(scrollController: _scrollController),
           ),
@@ -93,19 +93,19 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                           context.go('/intro');
                         },
                       ),
-                      const SizedBox(height: 56),
+                      const SizedBox(height: 40),
                       ScrollReveal(
                         scrollController: _scrollController,
                         child: const LiveDistance(),
                       ),
-                      const SizedBox(height: 84),
+                      const SizedBox(height: 56),
                       ScrollReveal(
                         scrollController: _scrollController,
                         child: const SignalJourney(),
                       ),
-                      const SizedBox(height: 84),
+                      const SizedBox(height: 56),
                       JourneyTimeline(scrollController: _scrollController),
-                      const SizedBox(height: 84),
+                      const SizedBox(height: 56),
                       Container(
                         key: _scaleKey,
                         child: Column(
@@ -127,7 +127,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                           ],
                         ),
                       ),
-                      const SizedBox(height: 84),
+                      const SizedBox(height: 56),
                       Container(
                         key: _dotKey,
                         child: ScrollReveal(
@@ -135,7 +135,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                           child: const PaleBlueDotSection(),
                         ),
                       ),
-                      const SizedBox(height: 84),
+                      const SizedBox(height: 56),
                       ScrollReveal(
                         scrollController: _scrollController,
                         child: const AboutTeaser(),
@@ -212,8 +212,8 @@ class _HeroHeader extends StatelessWidget {
               ),
               const SizedBox(height: 8),
               Text(
-                VoyagerFacts.subtitle,
-                style: Theme.of(context).textTheme.bodySmall,
+                'On 18 Nov 2026, Voyager 1 is one light-day from Earth.',
+                style: Theme.of(context).textTheme.bodyMedium,
               ),
             ],
           ),
@@ -221,7 +221,7 @@ class _HeroHeader extends StatelessWidget {
         TextButton.icon(
           onPressed: onReplay,
           icon: const Icon(Icons.replay, size: 16),
-          label: const Text('REPLAY'),
+          label: const Text('REPLAY SIGNAL'),
         ),
       ],
     );

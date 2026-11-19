@@ -8,6 +8,7 @@ import '../../app/theme.dart';
 import '../../core/data/facts.dart';
 import '../../core/data/sources.dart';
 import '../../core/settings/settings_provider.dart';
+import '../../core/torch/torch_service.dart';
 import '../intro/intro_controller.dart';
 import '../../widgets/section_header.dart';
 
@@ -76,6 +77,7 @@ class AboutScreen extends ConsumerWidget {
                     value: settings.hapticsOn,
                     onChanged: notifier.setHaptics,
                   ),
+                  const _TorchSwitch(),
                   SwitchListTile(
                     title: const Text('Reduce motion'),
                     subtitle: const Text(
@@ -236,6 +238,46 @@ class AboutScreen extends ConsumerWidget {
   }
 }
 
+class _TorchSwitch extends ConsumerStatefulWidget {
+  const _TorchSwitch();
+
+  @override
+  ConsumerState<_TorchSwitch> createState() => _TorchSwitchState();
+}
+
+class _TorchSwitchState extends ConsumerState<_TorchSwitch> {
+  late final Future<bool> _available;
+
+  @override
+  void initState() {
+    super.initState();
+    _available = ref.read(torchServiceProvider).available;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final settings = ref.watch(settingsProvider);
+    return FutureBuilder<bool>(
+      future: _available,
+      builder: (context, snapshot) {
+        final available = snapshot.data ?? false;
+        return SwitchListTile(
+          title: const Text('Phone torch'),
+          subtitle: Text(
+            available
+                ? 'Blinks in the same Morse pattern'
+                : 'No torch available on this device',
+          ),
+          value: settings.torchOn && available,
+          onChanged: available
+              ? (value) => ref.read(settingsProvider.notifier).setTorch(value)
+              : null,
+        );
+      },
+    );
+  }
+}
+
 class _Link extends StatelessWidget {
   const _Link({required this.label, required this.url});
 
@@ -244,8 +286,12 @@ class _Link extends StatelessWidget {
 
   Future<void> _open() async {
     final uri = Uri.parse(url);
-    if (await canLaunchUrl(uri)) {
-      await launchUrl(uri, mode: LaunchMode.externalApplication);
+    try {
+      if (!await launchUrl(uri, mode: LaunchMode.externalApplication)) {
+        await launchUrl(uri, mode: LaunchMode.inAppWebView);
+      }
+    } catch (_) {
+      await launchUrl(uri, mode: LaunchMode.platformDefault);
     }
   }
 

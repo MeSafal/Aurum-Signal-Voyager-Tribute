@@ -60,7 +60,7 @@ void main() {
       ),
     );
 
-    expect(find.text('Touch to transmit'), findsOneWidget);
+    expect(find.text('TAP TO BEGIN'), findsOneWidget);
     controller.start();
     await tester.pump();
     expect(find.text('V'), findsOneWidget);

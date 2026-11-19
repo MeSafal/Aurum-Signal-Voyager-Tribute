@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
 class AurumColors {
-  static const background = Color(0xFF05060D);
-  static const surface = Color(0xFF0B1020);
-  static const gold = Color(0xFFE8B84A);
-  static const goldLight = Color(0xFFFFF0B8);
-  static const goldDark = Color(0xFF9A6A1C);
-  static const text = Color(0xFFEEF1F8);
-  static const secondary = Color(0xFF9AA3B8);
+  static const background = Color(0xFF07080C);
+  static const surface = Color(0xFF121318);
+  static const gold = Color(0xFFD8B36A);
+  static const goldLight = Color(0xFFE8CD97);
+  static const goldDark = Color(0xFF8C7038);
+  static const text = Color(0xFFF1EFE8);
+  static const secondary = Color(0xFF9E998F);
 }
 
 ThemeData buildTheme() {
@@ -17,7 +17,7 @@ ThemeData buildTheme() {
     secondary: AurumColors.goldLight,
     surface: AurumColors.surface,
     onSurface: AurumColors.text,
-    error: Color(0xFFFF8A80),
+    error: Color(0xFFD98C7A),
   );
 
   final display = TextStyle(
@@ -43,7 +43,7 @@ ThemeData buildTheme() {
     colorScheme: colorScheme,
     scaffoldBackgroundColor: AurumColors.background,
     canvasColor: AurumColors.background,
-    splashFactory: InkSparkle.splashFactory,
+    splashFactory: InkRipple.splashFactory,
     textTheme: TextTheme(
       displayLarge: display.copyWith(fontSize: 64, height: 1.05),
       displayMedium: display.copyWith(fontSize: 48, height: 1.08),

@@ -36,11 +36,11 @@ class _GatePartState extends State<GatePart>
     return Stack(
       fit: StackFit.expand,
       children: [
-        const Starfield(starCount: 70),
+        const Starfield(starCount: 40),
         Center(
           child: Semantics(
             button: true,
-            label: 'Touch to begin the tribute',
+            label: 'Tap to begin the Morse tribute',
             child: GestureDetector(
               onTap: widget.onStart,
               child: AnimatedBuilder(
@@ -79,16 +79,17 @@ class _GatePartState extends State<GatePart>
                       ),
                       const SizedBox(height: 48),
                       Text(
-                        'Touch to transmit',
+                        'TAP TO BEGIN',
                         style: Theme.of(context).textTheme.headlineSmall
                             ?.copyWith(
-                              color: AurumColors.goldLight,
+                              color: AurumColors.gold,
                               letterSpacing: 1.2,
                             ),
                       ),
                       const SizedBox(height: 12),
                       Text(
-                        'A sound-and-light tribute · best with sound on',
+                        'A 21-second Morse tribute to Voyager 1.\n'
+                        'Sound on recommended.',
                         style: Theme.of(context).textTheme.bodySmall,
                         textAlign: TextAlign.center,
                       ),

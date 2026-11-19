@@ -1,6 +1,7 @@
-import 'dart:math' as math;
+import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 
@@ -8,9 +9,11 @@ import '../../../app/theme.dart';
 import '../../../core/audio/player_service.dart';
 import '../../../core/morse/morse_timeline.dart';
 import '../../../core/settings/settings_provider.dart';
+import '../../../core/torch/torch_service.dart';
+import '../../../widgets/morse_beacon.dart';
 import '../../../widgets/morse_glyph_row.dart';
 
-class MorseSequencePart extends StatefulWidget {
+class MorseSequencePart extends ConsumerStatefulWidget {
   const MorseSequencePart({
     super.key,
     required this.timeline,
@@ -31,12 +34,13 @@ class MorseSequencePart extends StatefulWidget {
   final bool compact;
 
   @override
-  State<MorseSequencePart> createState() => _MorseSequencePartState();
+  ConsumerState<MorseSequencePart> createState() => _MorseSequencePartState();
 }
 
-class _MorseSequencePartState extends State<MorseSequencePart>
+class _MorseSequencePartState extends ConsumerState<MorseSequencePart>
     with SingleTickerProviderStateMixin {
   late final Ticker _ticker;
+  late final TorchControl _torch;
   final ValueNotifier<int> _elapsed = ValueNotifier<int>(0);
   int _lastEventIndex = -1;
   bool _started = false;
@@ -45,6 +49,7 @@ class _MorseSequencePartState extends State<MorseSequencePart>
   @override
   void initState() {
     super.initState();
+    _torch = ref.read(torchServiceProvider);
     _ticker = createTicker(_onTick);
     _loadAndPlay();
   }
@@ -73,7 +78,7 @@ class _MorseSequencePartState extends State<MorseSequencePart>
   void _onTick(Duration elapsed) {
     if (!mounted) return;
     final raw = elapsed.inMilliseconds + widget.settings.latencyOffsetMs;
-    final now = math.max(0, raw);
+    final now = raw < 0 ? 0 : raw;
     _elapsed.value = now;
 
     var activeIndex = -1;
@@ -94,6 +99,13 @@ class _MorseSequencePartState extends State<MorseSequencePart>
           HapticFeedback.mediumImpact();
         }
       }
+      if (widget.settings.torchOn) {
+        if (activeIndex >= 0) {
+          _torch.setOn();
+        } else {
+          _torch.setOff();
+        }
+      }
     }
 
     if (!_finished && now >= widget.timeline.totalMs + widget.tailMs) {
@@ -105,6 +117,7 @@ class _MorseSequencePartState extends State<MorseSequencePart>
 
   @override
   void dispose() {
+    unawaited(_torch.forceOff());
     _ticker.dispose();
     _elapsed.dispose();
     super.dispose();
@@ -115,23 +128,23 @@ class _MorseSequencePartState extends State<MorseSequencePart>
     return ValueListenableBuilder<int>(
       valueListenable: _elapsed,
       builder: (context, now, _) {
+        final reduceMotion =
+            widget.settings.reduceMotion ||
+            MediaQuery.of(context).disableAnimations;
         return widget.compact
             ? _VoyagerLayout(
                 timeline: widget.timeline,
                 nowMs: now,
-                reduceMotion: _reduceMotion(context),
+                reduceMotion: reduceMotion,
               )
             : _VgrLayout(
                 timeline: widget.timeline,
                 nowMs: now,
-                reduceMotion: _reduceMotion(context),
+                reduceMotion: reduceMotion,
               );
       },
     );
   }
-
-  bool _reduceMotion(BuildContext context) =>
-      widget.settings.reduceMotion || MediaQuery.of(context).disableAnimations;
 }
 
 class _VgrLayout extends StatelessWidget {
@@ -147,19 +160,38 @@ class _VgrLayout extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final captionOpacity = _progress(nowMs - (timeline.totalMs - 200), 700);
+    final theme = Theme.of(context);
     return Center(
       child: FittedBox(
         fit: BoxFit.scaleDown,
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
+            MorseBeacon(
+              timeline: timeline,
+              nowMs: nowMs,
+              reduceMotion: reduceMotion,
+              size: 92,
+            ),
+            const SizedBox(height: 24),
+            Text(
+              'VGR',
+              style: theme.textTheme.displaySmall?.copyWith(
+                color: AurumColors.gold,
+              ),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              "Voyager's call sign",
+              style: theme.textTheme.bodySmall,
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 32),
             Row(
               mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 for (final span in timeline.letters) ...[
-                  if (span.index > 0) const SizedBox(width: 54),
+                  if (span.index > 0) const SizedBox(width: 40),
                   _Letter(
                     letter: span.text,
                     events: timeline.eventsForLetter(span.index),
@@ -170,18 +202,8 @@ class _VgrLayout extends StatelessWidget {
                 ],
               ],
             ),
-            const SizedBox(height: 56),
-            SizedBox(
-              height: 70,
-              child: Opacity(
-                opacity: captionOpacity,
-                child: Text(
-                  'V · G · R — Voyager\'s call sign.',
-                  style: Theme.of(context).textTheme.headlineSmall,
-                  textAlign: TextAlign.center,
-                ),
-              ),
-            ),
+            const SizedBox(height: 28),
+            Text('Listen for three letters', style: theme.textTheme.labelSmall),
           ],
         ),
       ),
@@ -202,30 +224,52 @@ class _VoyagerLayout extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final glow = _progress(nowMs - timeline.totalMs, 1500) * 0.2;
-    final glowColor = Color.lerp(
-      AurumColors.text,
-      AurumColors.goldLight,
-      glow / 0.2,
-    );
+    final theme = Theme.of(context);
     return Center(
       child: FittedBox(
         fit: BoxFit.scaleDown,
-        child: Row(
+        child: Column(
           mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            for (final span in timeline.letters) ...[
-              if (span.index > 0) const SizedBox(width: 22),
-              _Letter(
-                letter: span.text,
-                events: timeline.eventsForLetter(span.index),
-                nowMs: nowMs,
-                reduceMotion: reduceMotion,
-                span: span,
-                color: glowColor,
+            MorseBeacon(
+              timeline: timeline,
+              nowMs: nowMs,
+              reduceMotion: reduceMotion,
+              size: 76,
+            ),
+            const SizedBox(height: 20),
+            Text(
+              'VOYAGER',
+              style: theme.textTheme.displaySmall?.copyWith(
+                color: AurumColors.gold,
               ),
-            ],
+            ),
+            const SizedBox(height: 8),
+            Text(
+              'The spacecraft',
+              style: theme.textTheme.bodySmall,
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 24),
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                for (final span in timeline.letters) ...[
+                  if (span.index > 0) const SizedBox(width: 14),
+                  _Letter(
+                    letter: span.text,
+                    events: timeline.eventsForLetter(span.index),
+                    nowMs: nowMs,
+                    reduceMotion: reduceMotion,
+                  ),
+                ],
+              ],
+            ),
+            const SizedBox(height: 24),
+            Text(
+              'Same signal, longer message',
+              style: theme.textTheme.labelSmall,
+            ),
           ],
         ),
       ),
@@ -240,8 +284,6 @@ class _Letter extends StatelessWidget {
     required this.nowMs,
     required this.reduceMotion,
     this.large = false,
-    this.span,
-    this.color,
   });
 
   final String letter;
@@ -249,67 +291,37 @@ class _Letter extends StatelessWidget {
   final int nowMs;
   final bool reduceMotion;
   final bool large;
-  final MorseSpan? span;
-  final Color? color;
 
   @override
   Widget build(BuildContext context) {
-    final active =
-        span != null && nowMs >= span!.startMs && nowMs < span!.endMs + 160;
-    final completed = span != null && nowMs >= span!.endMs;
-    final emphasis = active ? _progress(nowMs - span!.startMs, 160) : 0.0;
-    final opacity = span == null
-        ? 1.0
-        : active
-        ? 0.35 + 0.65 * emphasis
-        : completed
-        ? 1.0
-        : 0.35;
-    final scale = reduceMotion || !active ? 1.0 : 1 + 0.04 * emphasis;
-
-    return Transform.scale(
-      scale: scale,
-      child: Opacity(
-        opacity: opacity,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              letter,
-              style:
-                  (large
-                          ? Theme.of(context).textTheme.displayLarge
-                          : Theme.of(context).textTheme.displayMedium)
-                      ?.copyWith(
-                        color: color ?? AurumColors.text,
-                        fontVariations: const <FontVariation>[
-                          FontVariation.weight(600),
-                        ],
-                      ),
-            ),
-            const SizedBox(height: 18),
-            MorseGlyphRow(
-              letter: letter,
-              events: events,
-              nowMs: nowMs,
-              reduceMotion: reduceMotion,
-              dotSize: large ? 14 : 9,
-              dashWidth: large ? 54 : 34,
-              glyphHeight: large ? 18 : 12,
-            ),
-          ],
-        ),
+    final active = events.any(
+      (event) => nowMs >= event.startMs && nowMs < event.endMs,
+    );
+    return Opacity(
+      opacity: active ? 1 : 0.72,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            letter,
+            style:
+                (large
+                        ? Theme.of(context).textTheme.displayLarge
+                        : Theme.of(context).textTheme.displayMedium)
+                    ?.copyWith(color: AurumColors.text),
+          ),
+          const SizedBox(height: 16),
+          MorseGlyphRow(
+            letter: letter,
+            events: events,
+            nowMs: nowMs,
+            reduceMotion: reduceMotion,
+            dotSize: large ? 14 : 9,
+            dashWidth: large ? 54 : 34,
+            glyphHeight: large ? 18 : 12,
+          ),
+        ],
       ),
     );
   }
-}
-
-double _progress(int value, int span) {
-  if (span <= 0) return 1;
-  final result = value / span;
-  return result < 0
-      ? 0
-      : result > 1
-      ? 1
-      : result;
 }
